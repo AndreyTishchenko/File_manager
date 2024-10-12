@@ -1,4 +1,3 @@
-
 import process from 'node:process';
 import * as path from 'node:path';
 import commandHandler from './commandHandler.js';
@@ -28,10 +27,10 @@ console.log('welcome to the File Manager, ${process.env.USERNAME}!')
 
 rl.prompt();
 
-rl.on('line', line => {
+rl.on('line', async line => {
     const [command, ...payload] = line.trim().split(' ');
     try {
-        commandHandler(command, payload);
+        await commandHandler(command, payload);
     } catch (error) {
         console.log(error.message);
     }

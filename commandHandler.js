@@ -1,7 +1,9 @@
 import process from 'node:process';
 import cd from './commands/cd.js';
 import up from './commands/up.js';
-import listFiles from './commands/ls.js';
+import ls from './commands/ls.js';
+import cat from './commands/cat.js';
+import osFunc from './commands/os.js';
 async function commandHandler(command, payload) {
     switch (command) {
         case '.exit':
@@ -20,8 +22,14 @@ async function commandHandler(command, payload) {
             if (payload.length > 0) {
                 throw new Error('Invalid input');
             } else {
-                await listFiles()
+                await ls()
             }
+            break;
+        case 'cat':
+            cat(payload);
+            break;
+        case 'os':
+            osFunc(payload);
             break;
         default:
             throw new Error('Invalid input');

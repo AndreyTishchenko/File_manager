@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import process from 'node:process';
-async function listFiles() {
+async function ls() {
     await fs.readdir(process.env.MAIN_PATH, (err, files) => {
         if (err) {
             console.log(err);
@@ -33,4 +33,4 @@ async function listFiles() {
         console.log('your current directory is: ', process.env.MAIN_PATH)
     });
 }
-export default listFiles;
+export default ls;
