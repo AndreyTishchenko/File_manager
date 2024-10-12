@@ -21,8 +21,10 @@ process.env.MAIN_PATH = path.join(process.cwd());
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: '$'
+    prompt: ''
 });
+
+console.log('welcome to the File Manager, ${process.env.USERNAME}!')
 
 rl.prompt();
 
