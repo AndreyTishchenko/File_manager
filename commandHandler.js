@@ -5,6 +5,7 @@ import ls from './commands/ls.js';
 import cat from './commands/cat.js';
 import add from './commands/add.js';
 import rm from './commands/rm.js';
+import cp from './commands/cp.js';
 import osFunc from './commands/os.js';
 import hash_calculator from './commands/hash_calculator.js';
 async function commandHandler(command, payload) {
@@ -36,6 +37,12 @@ async function commandHandler(command, payload) {
             }
             await add(payload)
             break
+        case 'cp':
+            if (payload.length < 2 || payload.length > 2) {
+                throw new Error('Invalid input');
+            }
+            await cp(payload);
+            break;
         case 'rm':
             if (payload.length == 0) {
                 throw new Error('Invalid input');
