@@ -3,7 +3,9 @@ import cd from './commands/cd.js';
 import up from './commands/up.js';
 import ls from './commands/ls.js';
 import cat from './commands/cat.js';
+import add from './commands/add.js';
 import osFunc from './commands/os.js';
+import hash_calculator from './commands/hash_calculator.js';
 async function commandHandler(command, payload) {
     switch (command) {
         case '.exit':
@@ -12,25 +14,38 @@ async function commandHandler(command, payload) {
             if (payload.length > 0) {
                 throw new Error('Invalid input');
             } else {
-                up()
+                await up()
             }
             break;
         case 'cd':
-            cd(payload);
+            await cd(payload);
             break;
         case 'ls':
             if (payload.length > 0) {
                 throw new Error('Invalid input');
-            } else {
-                await ls()
             }
+            await ls()
             break;
         case 'cat':
-            cat(payload);
+            await cat(payload).catch((error) => {
+                console.log(error.message);
+            })
             break;
+        case 'add':
+            if (payload.length == 0) {
+                throw new Error('Invalid input');
+            }
+            await add(payload)
+            break
         case 'os':
-            osFunc(payload);
+            await osFunc(payload);
             break;
+        case 'hash':
+            if (payload.length == 0) {
+                throw new Error('Invalid input');
+            }
+            await hash_calculator(payload);
+            break
         default:
             throw new Error('Invalid input');
     }

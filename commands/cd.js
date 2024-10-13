@@ -1,5 +1,5 @@
 import process from 'node:process';
-function cd(args) {
+async function cd(args) {
     let arg = args.join(' ');
     try {
         process.chdir(arg);
@@ -7,8 +7,6 @@ function cd(args) {
     } catch (error) {
         throw new Error('Operation failed');
     }
-    console.log(`cd finished`)
-    console.log('your current directory is: ', process.env.MAIN_PATH)
 }
 
 export default cd;

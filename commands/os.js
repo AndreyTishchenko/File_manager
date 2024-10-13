@@ -1,5 +1,5 @@
 import os from 'node:os';
-function osFunc(args) {
+async function osFunc(args) {
     if (args.length > 1 || args.length == 0) {
         throw new Error('Invalid input');
     }

@@ -1,12 +1,12 @@
 import fs from 'node:fs';
 import process from 'node:process';
 async function ls() {
-    await fs.readdir(process.env.MAIN_PATH, (err, files) => {
+    fs.readdir(process.env.MAIN_PATH, (err, files) => {
         if (err) {
             console.log(err);
             return;
         }
-        
+
         let filesArr = [];
         let  dirs = [];
         class File {
@@ -17,11 +17,10 @@ async function ls() {
         }
         files.forEach((file) => {
             if (fs.statSync(file).isDirectory()) {
-                dirs.push(new File(file, 'dir'));
+                dirs.push(new File(file, 'directory'));
             }else if (fs.statSync(file).isFile()) {
                 filesArr.push(new File(file, 'file'));
             }
-            
             dirs.sort(function(a, b) {
                 return a.name.localeCompare(b.name);
             });
@@ -30,7 +29,6 @@ async function ls() {
             });
         });
         console.table(dirs.concat(filesArr))
-        console.log('your current directory is: ', process.env.MAIN_PATH)
     });
 }
 export default ls;

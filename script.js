@@ -23,19 +23,22 @@ const rl = readline.createInterface({
     prompt: ''
 });
 
-console.log('welcome to the File Manager, ${process.env.USERNAME}!')
+console.log(`welcome to the File Manager, ${process.env.USERNAME}!`)
 
 rl.prompt();
 
+console.log(`you are currently in ${process.env.MAIN_PATH}`)
 rl.on('line', async line => {
-    const [command, ...payload] = line.trim().split(' ');
-    try {
-        await commandHandler(command, payload);
-    } catch (error) {
+    const [command, ...payload] = line.
+    trim().split(' ');
+    commandHandler(command, payload).catch((error) => {
         console.log(error.message);
-    }
-    rl.prompt();
-}).on
+    }).finally(() => {
+        console.log(`you are currently in ${process.env.MAIN_PATH}`)
+        rl.prompt();
+    });
+});
+
 
 process.on('exit', (text) => {
     console.log(`Thank you for using File Manager, ${process.env.USERNAME}, goodbye!`);
