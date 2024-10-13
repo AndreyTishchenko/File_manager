@@ -6,18 +6,12 @@ async function cat(args) {
     let arg = args.join(' ');
     let pathArg = path.join(process.env.MAIN_PATH, arg);
     const readStream = fs.createReadStream(pathArg, 'utf-8');
-    const customWritable = new Writable({
-        write(chunk, encoding) {
-          console.log(chunk.toString());
-        }
+    readStream.on('data', (chunk) => {
+        console.log(chunk);
     });
-    readStream.pipe(customWritable);
     await new Promise((resolve, reject) => {
-        customWritable.on('finish', resolve);
-        customWritable.on('error', reject);
-    });
-    readStream.on('error', (err) => {
-        console.log('operation failed');
+        readStream.on('error', reject);
+        readStream.on('end', resolve);
     });
 }
 
