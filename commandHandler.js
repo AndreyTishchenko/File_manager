@@ -28,9 +28,7 @@ async function commandHandler(command, payload) {
             await ls()
             break;
         case 'cat':
-            await cat(payload).catch((error) => {
-                console.log(error.message);
-            })
+            await cat(payload)
             break;
         case 'add':
             if (payload.length == 0) {

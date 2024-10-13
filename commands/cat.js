@@ -11,10 +11,10 @@ async function cat(args) {
           console.log(chunk.toString());
         }
     });
+    readStream.pipe(customWritable);
     await new Promise((resolve, reject) => {
         customWritable.on('finish', resolve);
         customWritable.on('error', reject);
-        readStream.pipe(customWritable);
     });
     readStream.on('error', (err) => {
         console.log('operation failed');

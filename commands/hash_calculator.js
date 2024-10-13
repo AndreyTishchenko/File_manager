@@ -9,8 +9,9 @@ const hash_calculator = async (args) => {
     const rs = fs.createReadStream(FilePath);
     await new Promise((resolve, reject) => {
         rs.on('error', reject);
-        rs.on('end', () => console.log(hash.digest('hex')), resolve);
+        rs.on('end', resolve);
         rs.on('data', chunk => hash.update(chunk));
     });
+    console.log(hash.digest('hex'))
 };
 export default hash_calculator;

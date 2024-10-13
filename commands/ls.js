@@ -1,34 +1,25 @@
-import fs from 'node:fs';
+import fs from 'fs/promises';
 import process from 'node:process';
 async function ls() {
-    fs.readdir(process.env.MAIN_PATH, (err, files) => {
-        if (err) {
-            console.log(err);
-            return;
+    class File {
+        constructor(name, type) {
+            this.name = name;
+            this.type = type;
         }
-
-        let filesArr = [];
-        let  dirs = [];
-        class File {
-            constructor(name, type) {
-                this.name = name;
-                this.type = type;
-            }
-        }
-        files.forEach((file) => {
-            if (fs.statSync(file).isDirectory()) {
-                dirs.push(new File(file, 'directory'));
-            }else if (fs.statSync(file).isFile()) {
-                filesArr.push(new File(file, 'file'));
-            }
-            dirs.sort(function(a, b) {
-                return a.name.localeCompare(b.name);
-            });
-            filesArr.sort(function(a, b) {
-                return a.name.localeCompare(b.name);
-            });
-        });
-        console.table(dirs.concat(filesArr))
-    });
+    }
+    let filesArr = [];
+    let dirs = [];
+    await fs.readdir(process.env.MAIN_PATH).then((files) => {
+        return Promise.allSettled(files.map(((file) => fs.stat(file).then((statFile) => {
+                    if (statFile.isDirectory()) {
+                        dirs.push(new File(file, 'directory'));
+                    } else if (statFile.isFile()) {
+                        filesArr.push(new File(file, 'file'));
+                    }
+                }))
+            )
+        )
+    })
+    console.table(dirs.concat(filesArr));
 }
 export default ls;
