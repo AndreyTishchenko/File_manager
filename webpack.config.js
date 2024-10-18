@@ -20,15 +20,15 @@ export default {
     },
     externals: [nodeExternals()],
     resolve: {
-        extensions: ['.ts', '.js'],
+        extensions: ['.ts', '.js']
     },
     module: {
         rules: [
             {
                 test: /\.ts$/,
                 use: 'ts-loader',
-                exclude: /node_modules/,
-            },
+                exclude: /node_modules/
+            }
         ],
     },
 };

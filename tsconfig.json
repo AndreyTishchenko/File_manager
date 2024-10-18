@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "nodenext",  // Use 'commonjs' if you're not using ESM
-    "moduleResolution": "nodenext",
+    "target": "ESNext",
+    "module": "ESNext",
+    "outDir": "./dist", // Change to your output directory
+    "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "strict": true
+    "skipLibCheck": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["server.ts", "RequestsHandler.ts"], // Include both files
   "exclude": ["node_modules"]
 }

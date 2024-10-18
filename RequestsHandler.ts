@@ -4,7 +4,7 @@ import getDataBase from "./functions/getDataBase";
 import { User } from "./types/User";
 import * as http from 'http';
 import * as url from 'url';
-import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 
 async function RequestsHandler(req: http.IncomingMessage, res: http.ServerResponse, requestBody: string): Promise<void> {
     if (req.url) {
@@ -22,7 +22,7 @@ async function RequestsHandler(req: http.IncomingMessage, res: http.ServerRespon
                 const userInfo = JSON.parse(requestBody);
                 if (userInfo.hasOwnProperty('name') && userInfo.hasOwnProperty('age') && userInfo.hasOwnProperty('hobbies')) {
                   try {
-                    const id = uuidv4().toString();
+                    const id = crypto.randomUUID().toString();
                     const user: User = {
                       id: id,
                       name: userInfo.name,
