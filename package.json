@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:prod": "webpack --mode production && node --experimental-specifier-resolution=node dist/bundle.js",
-    "start:dev": "npx tsx server.ts && ts-node-dev server.ts"
+    "start:dev": "npx tsx server.ts && ts-node-dev server.ts",
+    "start:multi": "npx tsx load_balancer.ts"
   },
   "author": "",
   "type": "module",

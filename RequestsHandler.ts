@@ -6,7 +6,7 @@ import * as http from 'http';
 import * as url from 'url';
 import crypto from 'crypto';
 import get_single_user from "./functions/get_single_user";
-import  updateUser from "./functions/update_user";
+import updateUser from "./functions/update_user";
 
 async function RequestsHandler(req: http.IncomingMessage, res: http.ServerResponse, requestBody: string): Promise<void> {
     if (req.url) {
