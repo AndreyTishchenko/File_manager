@@ -4,9 +4,10 @@ import process from 'process';
 import cluster from 'cluster';
 import * as dotenv from 'dotenv';
 import RequestsHandler from './RequestsHandler';
+
 dotenv.config();
+
 const PORT = Number(process.env.PORT) || 4000;
-console.log(PORT)
 const WORKER_COUNT = os.cpus().length - 1;
 
 if (cluster.isMaster) {
@@ -51,17 +52,20 @@ if (cluster.isMaster) {
     });
 } else {
     // Worker processes
-    http.createServer(
-        (req, res) => {
-          let requestBody = '';
-      
-          req.on('data', (chunk) => {
+    const workerPort = Number(process.env.PORT); // Get the port from the environment variable
+    const server = http.createServer((req, res) => {
+        let requestBody = '';
+
+        req.on('data', (chunk) => {
             requestBody += chunk;
-          });
-      
-          req.on('end', async() => {
-            RequestsHandler(req, res, requestBody)
-          })
-        }
-    )
+        });
+
+        req.on('end', async () => {
+            await RequestsHandler(req, res, requestBody);
+        });
+    });
+
+    server.listen(workerPort, () => {
+        console.log(`Worker ${process.pid} listening on port ${workerPort}`);
+    });
 }
