@@ -1,7 +1,7 @@
 import getDataBase from "./getDataBase";
+import database from "./getDataBase";
 async function get_single_user(id:string) {
-    const users = await getDataBase();
-    const user = users.find((item) => {
+    const user = database.find((item) => {
         return item.id == id;
     });
     return user;

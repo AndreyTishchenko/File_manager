@@ -1,6 +1,6 @@
 import addUser from "./functions/AddUSer";
 import deleteUser from "./functions/DeleteUser";
-import getDataBase from "./functions/getDataBase";
+import database from "./functions/getDataBase";
 import { User } from "./types/User";
 import * as http from 'http';
 import * as url from 'url';
@@ -15,7 +15,7 @@ async function RequestsHandler(req: http.IncomingMessage, res: http.ServerRespon
         if (arrUrl[1] == 'api' && arrUrl[2] == 'users') {
           if (arrUrl.length === 3) {
               if (req.method === 'GET') {
-                let usersObject = await getDataBase();
+                let usersObject = database;
                 let usersJSON = JSON.stringify(usersObject);
                 res.writeHead(200, { 'Content-Type': 'text/plain' });
                 res.end(usersJSON);
@@ -47,12 +47,11 @@ async function RequestsHandler(req: http.IncomingMessage, res: http.ServerRespon
                 res.end('Not Found');
               }
           } else if(arrUrl.length === 4){
-            let users = await getDataBase();
-            const userIndex = users.findIndex(p => p.id === arrUrl[3]);
+            const userIndex = database.findIndex(p => p.id === arrUrl[3]);
             if (userIndex !== -1) {
               if (req.method === 'DELETE') {
                   try {
-                    await deleteUser(arrUrl[3], users)
+                    await deleteUser(arrUrl[3])
                     res.writeHead(204, { 'Content-Type': 'text/plain' });
                     res.end('User deleted successfully');
                   } catch (error) {
