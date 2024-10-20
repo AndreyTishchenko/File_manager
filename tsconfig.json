@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "outDir": "./dist", // Change to your output directory
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["server.ts", "RequestsHandler.ts"], // Include both files
+  "exclude": ["node_modules"]
+}
