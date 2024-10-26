@@ -6,9 +6,9 @@ import users from './users_database';
 import addUserToDB from './addUserToDB'
 export default function router(data: string, ws: WebSocket) {
     let dataObject = JSON.parse(data);
-    let userData = JSON.parse(dataObject.data)
     switch (dataObject.type) {
         case "reg":
+            let userData = JSON.parse(dataObject.data)        
             const userCreds = JSON.parse(dataObject.data)
             const id = crypto.createHash('md5').update(String(userData.name)).digest('hex');
             ws.on('close', () => {
@@ -23,6 +23,10 @@ export default function router(data: string, ws: WebSocket) {
                 addUserToDB(userCreds, ws)
             }
             break;
+        case "create_room":
+            console.log('dsacsdcadscasdcef');
+            createRoom();
+            break
         case "add_user_to_room":
             console.log(dataObject.message)
             break;
