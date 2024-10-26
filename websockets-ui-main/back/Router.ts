@@ -6,15 +6,21 @@ import users from './users_database';
 import addUserToDB from './addUserToDB'
 export default function router(data: string, ws: WebSocket) {
     let dataObject = JSON.parse(data);
+    let userData = JSON.parse(dataObject.data)
     switch (dataObject.type) {
         case "reg":
-            const id = crypto.createHash('md5').update(String(dataObject.data.name)).digest('hex');
+            const userCreds = JSON.parse(dataObject.data)
+            const id = crypto.createHash('md5').update(String(userData.name)).digest('hex');
+            ws.on('close', () => {
+                console.log(users.get(id).ws_connection)
+                users.get(id).ws_connection = null;
+            })
             if (users.has(id)){
                 console.log('User already exists')
-                reg_user(dataObject, ws);
+                reg_user(userCreds, ws);
             }else{
                 console.log('User does not exist')
-                addUserToDB(dataObject, ws)
+                addUserToDB(userCreds, ws)
             }
             break;
         case "add_user_to_room":

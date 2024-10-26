@@ -2,14 +2,12 @@ import WebSocket from 'ws'
 export default class User {
     name: string;
     index: string;
-    ws_connection: WebSocket;
+    ws_connection: WebSocket|null = null;
     password: string;
-    active: boolean = false;
     
-    constructor(name:string, index:string, ws_connection:WebSocket, password:string){
+    constructor(name:string, index:string, password:string){
         this.name = name
         this.index = index
-        this.ws_connection = ws_connection
         this.password = password
     }
 }
