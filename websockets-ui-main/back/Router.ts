@@ -2,30 +2,30 @@ import WebSocket from 'ws';
 import crypto from 'crypto'
 import { wss } from './websocketServer';
 import reg_user from './reg_user';
-import users from './users_database';
+import {users} from './database';
 import addUserToDB from './addUserToDB'
+import createRoom from './createRoom';
 export default function router(data: string, ws: WebSocket) {
     let dataObject = JSON.parse(data);
     switch (dataObject.type) {
         case "reg":
-            let userData = JSON.parse(dataObject.data)        
+            console.log('new Registration')
+            let userData = JSON.parse(dataObject.data)
             const userCreds = JSON.parse(dataObject.data)
             const id = crypto.createHash('md5').update(String(userData.name)).digest('hex');
             ws.on('close', () => {
-                console.log(users.get(id).ws_connection)
                 users.get(id).ws_connection = null;
             })
             if (users.has(id)){
-                console.log('User already exists')
+                console.log('router, has user in db')
                 reg_user(userCreds, ws);
             }else{
-                console.log('User does not exist')
+                console.log('router, no such user in db')
                 addUserToDB(userCreds, ws)
             }
             break;
         case "create_room":
-            console.log('dsacsdcadscasdcef');
-            createRoom();
+            createRoom(ws);
             break
         case "add_user_to_room":
             console.log(dataObject.message)

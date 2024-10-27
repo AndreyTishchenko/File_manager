@@ -1,5 +1,5 @@
 import User_Creds from './types/User_creds';
-import users from './users_database';
+import {rooms, users} from './database';
 import WebSocket from "ws";
 import crypto from 'crypto';
 import { wss } from './websocketServer';
@@ -7,7 +7,6 @@ import { json } from 'stream/consumers';
 
 export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
     const id = crypto.createHash('md5').update(String(dataObject.name)).digest('hex');
-    console.log(users.get(id).pswword, "==", dataObject.name)
     if(users.get(id).password == dataObject.password){
         if(users.get(id).ws_connection){
             ws.send(JSON.stringify({
@@ -21,6 +20,7 @@ export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
                 id: 0,
             }));
         }else{
+            console.log('registrations was correct');
             users.get(id).ws_connection = ws;
             users.get(id).ws_connection.send(JSON.stringify({
                 type: "reg",
@@ -39,17 +39,30 @@ export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
                 id: 0,
             });
             users.forEach((client) => {
-                client.ws_connection.send(updateWinnersMessage)
+                if (client.ws_connection !== null) {
+                    client.ws_connection.send(updateWinnersMessage)
+                }
             });
 
             // Sending room update in a similar way
-            const roomUpdateMessage = JSON.stringify({
-                type: "update_room",
-                data: JSON.stringify([]),
-                id: 0,
+            let freeRooms = Array<{roomId: string, roomUsers: Array<{id: string, name: string}>}>();
+            rooms.forEach((room) => {
+                if (room.users.length < 2) {
+                    freeRooms.push(({roomId: room.RoomId, roomUsers: room.users}));
+                }
             });
             users.forEach((client) => {
-                client.ws_connection.send(roomUpdateMessage);
+                if (client.ws_connection !== null) {
+                    console.log('connection is open for user: ', client.name);
+                    console.log(client.index)
+                    let freeRoomsFroThisUser = freeRooms.filter(room => !room.roomUsers.some(user => user.id === client.index));
+                    console.log(freeRooms);
+                    client.ws_connection.send(JSON.stringify({
+                        type: "update_room",
+                        data: JSON.stringify(freeRoomsFroThisUser),
+                        id: 0,
+                    }));
+                }
             });
         }
     }else{
@@ -64,7 +77,4 @@ export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
             id: 0,
         }));
     }
-
-
-
 }
