@@ -1,8 +1,8 @@
-import User_Creds from './types/User_creds';
-import {rooms, users} from './database';
+import User_Creds from '../types/User_creds';
+import {rooms, users} from '../database';
 import WebSocket from "ws";
 import crypto from 'crypto';
-import { wss } from './websocketServer';
+import { wss } from '../websocketServer';
 import { json } from 'stream/consumers';
 
 export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
@@ -20,7 +20,6 @@ export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
                 id: 0,
             }));
         }else{
-            console.log('registrations was correct');
             users.get(id).ws_connection = ws;
             users.get(id).ws_connection.send(JSON.stringify({
                 type: "reg",
@@ -53,10 +52,7 @@ export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
             });
             users.forEach((client) => {
                 if (client.ws_connection !== null) {
-                    console.log('connection is open for user: ', client.name);
-                    console.log(client.index)
                     let freeRoomsFroThisUser = freeRooms.filter(room => !room.roomUsers.some(user => user.id === client.index));
-                    console.log(freeRooms);
                     client.ws_connection.send(JSON.stringify({
                         type: "update_room",
                         data: JSON.stringify(freeRoomsFroThisUser),

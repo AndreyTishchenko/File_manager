@@ -1,7 +1,8 @@
-import Room from "./classes/Room";
-import {users} from "./database"
+import Room from "../classes/Room";
+import {users} from "../database"
 import crypto from 'crypto'
-import {rooms} from  "./database"
+import {rooms} from  "../database"
+import createGame from "./createGame";
 import WebSocket from "ws";
 export default function createRoom(ws: WebSocket){
     // Use Map's values() method to find the user
@@ -19,7 +20,6 @@ export default function createRoom(ws: WebSocket){
         });
         users.forEach((client) => {
             if (client.ws_connection !== null) {
-                console.log(client.index)
                 let freeRoomsFroThisUser = freeRooms.filter(room => !room.roomUsers.some(user => user.id === client.index));
                 client.ws_connection.send(JSON.stringify({
                     type: "update_room",
