@@ -4,6 +4,9 @@ import User from '../classes/User';
 import createGame from './createGame';
 export default function AddUserToRoom(ws: WebSocket, data: {indexRoom: string}){
     const room = rooms.get(data.indexRoom);
+    if (!room) {
+        return; // or handle the case when room is undefined
+    }
     let user: User|undefined;
     users.forEach( (user1) => {
         if (user1.ws_connection == ws) {
@@ -13,7 +16,7 @@ export default function AddUserToRoom(ws: WebSocket, data: {indexRoom: string}){
     if (user !== undefined) {
         room.users.push({name: user.name, id: user.index});
     }
-    
+
     rooms.set(data.indexRoom, room);
     let freeRooms = Array<{roomId: string, roomUsers: Array<{id: string, name: string}>}>();
     rooms.forEach((room) => {

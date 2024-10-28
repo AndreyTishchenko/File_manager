@@ -7,25 +7,26 @@ import { json } from 'stream/consumers';
 
 export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
     const id = crypto.createHash('md5').update(String(dataObject.name)).digest('hex');
-    if(users.get(id).password == dataObject.password){
-        if(users.get(id).ws_connection){
+    const user = users.get(id);
+    if (user && user.password === dataObject.password) {
+        if (user.ws_connection) {
             ws.send(JSON.stringify({
                 type: "reg",
                 data: JSON.stringify({
                     name: dataObject.name,
-                    index: id, // Use the index of the newly added user
+                    index: id,
                     error: true,
                     errorText: 'User is already logged in'
                 }),
                 id: 0,
             }));
-        }else{
-            users.get(id).ws_connection = ws;
-            users.get(id).ws_connection.send(JSON.stringify({
+        } else {
+            user.ws_connection = ws;
+            user.ws_connection.send(JSON.stringify({
                 type: "reg",
                 data: JSON.stringify({
                     name: dataObject.name,
-                    index: users.size, // Use the index of the newly added user
+                    index: users.size,
                     error: false,
                     errorText: ''
                 }),
@@ -43,7 +44,6 @@ export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
                 }
             });
 
-            // Sending room update in a similar way
             let freeRooms = Array<{roomId: string, roomUsers: Array<{id: string, name: string}>}>();
             rooms.forEach((room) => {
                 if (room.users.length < 2) {
@@ -61,12 +61,12 @@ export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
                 }
             });
         }
-    }else{
+    } else {
         ws.send(JSON.stringify({
             type: "reg",
             data: JSON.stringify({
                 name: dataObject.name,
-                index: id, // Use the index of the newly added user
+                index: id,
                 error: true,
                 errorText: 'Wrong password'
             }),

@@ -1,7 +1,6 @@
 import Room from "../classes/Room";
-import {users} from "../database"
+import {users, rooms} from "../database"
 import crypto from 'crypto'
-import {rooms} from  "../database"
 import createGame from "./createGame";
 import WebSocket from "ws";
 export default function createRoom(ws: WebSocket){
@@ -11,7 +10,10 @@ export default function createRoom(ws: WebSocket){
         const id = user.index;
         const RoomId = crypto.createHash('md5').update(String(id)).digest('hex');
         rooms.set(RoomId, new Room(RoomId));
-        rooms.get(RoomId).users.push({id: id, name: user.name});
+        const room = rooms.get(RoomId);
+        if (room) {
+            room.users.push({id: id, name: user.name});
+        }
         let freeRooms = Array<{roomId: string, roomUsers: Array<{id: string, name: string}>}>();
         rooms.forEach((room) => {
             if (room.users.length < 2) {
