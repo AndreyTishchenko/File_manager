@@ -4,6 +4,7 @@ import WebSocket from "ws";
 import crypto from 'crypto';
 import { wss } from '../websocketServer';
 import { json } from 'stream/consumers';
+import updateWinners from './updateWinners';
 
 export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
     const id = crypto.createHash('md5').update(String(dataObject.name)).digest('hex');
@@ -33,14 +34,9 @@ export default function reg_user(dataObject: User_Creds, ws: WebSocket) {
                 id: 0,
             }));
 
-            let updateWinnersMessage = JSON.stringify({
-                type: "update_winners",
-                data: JSON.stringify([]),
-                id: 0,
-            });
             users.forEach((client) => {
                 if (client.ws_connection !== null) {
-                    client.ws_connection.send(updateWinnersMessage)
+                    updateWinners(client.ws_connection)
                 }
             });
 

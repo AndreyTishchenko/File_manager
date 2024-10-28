@@ -9,5 +9,4 @@ export default function addUserToDB(dataObject: UserCreds, ws: WebSocket) {
     const id = crypto.createHash('md5').update(String(dataObject.name)).digest('hex');
     users.set(id, new User(String(dataObject.name), id, String(dataObject.password)))
     reg_user(dataObject, ws)
-
 }
